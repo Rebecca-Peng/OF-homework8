@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "7AA2723E026B85895B9E554357D82441B7217EDD",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "7AA2723E026B85895B9E554357D82441B7217EDD" : 9223372036854775807,
+    "EBA5AC9C86A2E19523F86791A6F5BFB619A851EA" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "AEA0A4B7-37BF-4770-B1DD-1B93555798F0",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "7AA2723E026B85895B9E554357D82441B7217EDD" : "Homework08\/",
+    "EBA5AC9C86A2E19523F86791A6F5BFB619A851EA" : "Homework-05\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "example",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "example.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Rebecca-Peng\/OF-homework8.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7AA2723E026B85895B9E554357D82441B7217EDD"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/Rebecca-Peng\/OF-Homework5.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "EBA5AC9C86A2E19523F86791A6F5BFB619A851EA"
+    }
+  ]
+}

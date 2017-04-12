@@ -16,9 +16,16 @@ ofPoint zLe = ofPoint(-150, -150);  // go up and left
 ofPoint zEnd = ofPoint(150, 90); // go down and left
 ofPoint zEnd1 = ofPoint(5, 3);  // go down and right   it's a circle!
 ofPoint gPoints[] = {zBot, zRi, zLe, zEnd,zEnd1};
-//ofPoint gPoints[] = {zBot, zRi};
+
+ofPoint uBot = ofPoint(0, 0);  // start
+ofPoint uRi = ofPoint(-150, 90); // go up and right
+ofPoint uLe = ofPoint(-150, 150);  // go up and left
+ofPoint uEnd = ofPoint(-150, 90); // go down and left
+ofPoint uEnd1 = ofPoint(-5, 3);  // go down and right   it's a circle!
+ofPoint gPoints2[] = {uBot, uRi,uLe, uEnd,uEnd1};
 
 simpleGesture gesture;
+simpleGesture gesture2;
 
 void ofApp::setup(){
     
@@ -36,7 +43,8 @@ void ofApp::setup(){
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
     
-    gesture.setup(gPoints, 4, 20000);
+    gesture.setup(gPoints, 4, 5000);
+    gesture2.setup(gPoints2, 4, 5000);
     
     //agent
     for (curAgent; curAgent < MAX_AGENTS; curAgent++) {  // only enable if we disable mouse gravity
@@ -134,7 +142,7 @@ bool simpleGesture::track (ofPoint iPt) {
         if (absNext.y > iPt.y)
             yMatch = true;
     }
-    
+
     // if we have x & y
     if (xMatch && yMatch) {
         curIdx++;
@@ -146,6 +154,64 @@ bool simpleGesture::track (ofPoint iPt) {
             curIdx = 1; // start from beginning
             return(true);
         } 
+    }
+    
+    // cout << iPt.x << " " << iPt.y << " " << curIdx << endl;  // debug
+    return (false);
+}
+
+bool simpleGesture::track2 (ofPoint iPt) {
+    
+    bool xMatch = false, yMatch = false;
+    int timePerPoint = timeout / maxIdx;
+    
+    int currentT = ofGetElapsedTimeMillis();
+    if (currentT > stepStartTime + timePerPoint) {
+        curIdx = 1;
+        lastPoint = iPt;
+        stepStartTime = currentT;
+    }
+    
+    // where to go next abs screen coords
+    ofPoint absNext2 = lastPoint + gPoints2[curIdx];
+    
+    if (gPoints2[curIdx-1].x == gPoints2[curIdx].x) {  // if nothing has changed, match.
+        xMatch = true;
+    }
+    
+    if (gPoints2[curIdx-1].y == gPoints2[curIdx].y) {  // if nothing has changed, match.
+        yMatch = true;
+    }
+    
+    // find out what direction we are heading in
+    if (gPoints2[curIdx-1].x < gPoints2[curIdx].x) {  // going right
+        if (absNext2.x < iPt.x)			// have we exceeded that x?
+            xMatch = true;
+    } else {					// going left
+        if (absNext2.x > iPt.x)
+            xMatch = true;
+    }
+    
+    if (gPoints2[curIdx-1].y < gPoints2[curIdx].y) {  // going down
+        if (absNext2.y < iPt.y) 			// have we exceeded that y?
+            yMatch = true;
+    } else {					// going up
+        if (absNext2.y > iPt.y)
+            yMatch = true;
+    }
+    
+    
+    // if we have x & y
+    if (xMatch && yMatch) {
+        curIdx++;
+        lastPoint = iPt;
+        stepStartTime = currentT;
+        
+        if (curIdx == maxIdx) {  // if we just matched our last point
+            // cout << "Matched" << endl;  // debug
+            curIdx = 1; // start from beginning
+            return(true);
+        }
     }
     
     // cout << iPt.x << " " << iPt.y << " " << curIdx << endl;  // debug
@@ -208,21 +274,22 @@ void ofApp::draw(){
             Agents[i].draw(handPos);
         }
         
-        
-//        ofDrawCircle(handPos.x, handPos.y, 90);
-//        ofTranslate(ofGetWidth()/2, ofGetHeight()/2);
-        
-//        ofDrawArrow(handPos, handPos + 100*handNormal);
-        
-        // Give simple gesture more data and get return value
+
         bool gDone = gesture.track(simpleHands[0].fingers[INDEX].tip);  // send index finger tip
+        bool gDone2 = gesture2.track2(simpleHands[0].fingers[INDEX].tip);  // send index finger tip
         
         if (gDone)
         {
-              count ++;
+            count = true;
               cout << "----------------------GOT IT----------------------" << endl;
               cout << count<< endl;
-//            ofBackground(0);
+        }
+        
+        if (gDone2)
+        {
+            count = false;
+            cout << "----------------------GOT IT 2----------------------" << endl;
+            cout << count<< endl;
         }
 
         
@@ -231,20 +298,8 @@ void ofApp::draw(){
             ofPoint pip = simpleHands[i].fingers[ fingerTypes[f] ].pip;  // proximal
             ofPoint dip = simpleHands[i].fingers[ fingerTypes[f] ].dip;  // distal
             ofPoint tip = simpleHands[i].fingers[ fingerTypes[f] ].tip;  // fingertip
-            
-//            ofSetColor(0, 255, 0);
-//            ofDrawSphere(mcp.x, mcp.y, mcp.z, 12);
-//            ofDrawSphere(pip.x, pip.y, pip.z, 12);
-//            ofDrawSphere(dip.x, dip.y, dip.z, 12);
-           // ofDrawSphere(tip.x, tip.y, tip.z, 12);
-            
-//            ofSetColor(255, 0, 0);
-//            ofSetLineWidth(20);
-//            ofDrawLine(mcp, pip);
-//            ofDrawLine(pip.x, pip.y, pip.z, dip.x, dip.y, dip.z);
-//            ofDrawLine(dip.x, dip.y, dip.z, tip.x, tip.y, tip.z);
 
-//        
+      
         for (int f=0; f<5; f++) {
             ofPoint mcp = simpleHands[i].fingers[ fingerTypes[f] ].mcp;  // metacarpal
             ofPoint pip = simpleHands[i].fingers[ fingerTypes[f] ].pip;  // proximal
@@ -257,36 +312,18 @@ void ofApp::draw(){
             ofDrawSphere(mcp.x, mcp.y, mcp.z, 12);
             ofDrawSphere(pip.x, pip.y, pip.z, 12);
             ofDrawSphere(dip.x, dip.y, dip.z, 12);
-            
-//            ofDrawCircle(tip.x, tip.y, 12);
-//            ofDrawCircle(mcp.x, mcp.y, 12);
-//            ofDrawCircle(pip.x, pip.y, 12);
-//            ofDrawCircle(dip.x, dip.y, 12);
 
-            
-            
             
             ofSetColor(0);
             ofSetLineWidth(100);
             ofDrawLine(mcp.x, mcp.y, mcp.z, pip.x, pip.y, pip.z);
             ofDrawLine(pip.x, pip.y, pip.z, dip.x, dip.y, dip.z);
             ofDrawLine(dip.x, dip.y, dip.z, tip.x, tip.y, tip.z);
-//            ofBeginShape();
-//            ofVertex(mcp.x,mcp.y);
-//          
-//            ofVertex(mcp.x+24,mcp.y);
-//            ofVertex(pip.x+24,pip.y);
-//              ofVertex(pip.x,pip.y);
-//            ofEndShape();
-            
-//            ofSetColor(100);
-//            ofDrawCylinder(tip.x, tip.y,tip.z, 12, 40);
-//        }
         }
         }
     }
     
-    if(count > 0) {
+    if(count) {
         zWord.load("z.png");
         ofSetColor(255,255,255);
         zWord.draw(0-zWord.getWidth()/2,0-zWord.getHeight()/2,-50 );

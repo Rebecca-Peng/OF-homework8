@@ -27,13 +27,14 @@ public:
     
 	vector <int> fingersFound;
 	ofEasyCam cam;
-    int count = 0;
+    bool count = false;
 };
 
 class simpleGesture {
 public:
     void setup(ofPoint *points, int maxIndex, int msTout);
     bool track(ofPoint inputPoint);  // given a moving input point returns true if matched
+    bool track2(ofPoint inputPoint);  // given a moving input point returns true if matched
     
     int maxIdx;		// max gesture array index
     int timeout;	// how long do we have to match the gesture before reset
